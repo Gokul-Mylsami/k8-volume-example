@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: backend-service
+    spec:
+      containers:
+        - name: backend
+          image: gokulmylsami/sample-node:latest
+
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: story-volume
+
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
